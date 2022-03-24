@@ -1,0 +1,22 @@
+---
+galaxy_info:
+  author: "darexsu"
+  role_name: "elk"
+  description: "install and configure elk-stack"
+  company: ""
+  license: "license (MIT)"
+  min_ansible_version: 2.9
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+        - bullseye
+    - name: Ubuntu
+      versions:
+        - xenial
+        - focal
+    - name: EL
+      versions:
+        - 8
+  galaxy_tags:
+    - elk

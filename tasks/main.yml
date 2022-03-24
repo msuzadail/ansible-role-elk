@@ -1,0 +1,46 @@
+---
+- name: merge dictionaries
+  block:
+    - include_vars:
+        file: ../../darexsu.elk/defaults/main.yml
+        name: elk_default_vars
+
+    - name: merge default and new dictionaries
+      set_fact:
+        "{{ item.key }}": "{{ elk_default_vars[item.key] | combine(merge[item.key], recursive=True)}}"
+      when: elk_default_vars[item.key] is defined
+      with_dict: "{{ merge }}"
+
+    - name: combine defaults vars with merge dictionary
+      set_fact:
+        merge: "{{ elk_default_vars | combine(merge, recursive=True)}}"
+  when: merge is defined
+
+- name: elk role is disabled
+  meta: end_play
+  when: not elk.enabled
+
+- name: include role ElasticSearch
+  include_role:
+    name: darexsu.elasticsearch
+  when: elasticsearch.enabled
+
+- name: include role Kibana
+  include_role:
+    name: darexsu.kibana
+  when: kibana.enabled
+
+- name: include role Logstash
+  include_role:
+    name: darexsu.logstash
+  when: logstash.enabled
+
+- name: include role Filebeat
+  include_role:
+    name: darexsu.filebeat
+  when: filebeat.enabled
+
+- name: include role FirewallD
+  include_role:
+    name: darexsu.firewalld
+  when: firewalld.enabled

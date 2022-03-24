@@ -1,0 +1,255 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Unnessessary command
+      ansible.builtin.shell:
+        cmd: "{{ lookup('env', 'ANSIBLE_COMMAND') }}"
+      when: lookup('env', 'ANSIBLE_COMMAND') | length > 0
+
+  vars:
+    merge:
+      # ELK
+      elk:
+        enabled: true
+        version: "8.x"
+
+      # ElasticSearch
+      elasticsearch:
+        enabled: true
+        version: "{{ elk.version }}"
+        repo: "elastic"
+        service:
+          enabled: true
+          state: "stopped"
+      # ElasticSearch -> install
+      elasticsearch_install:
+        enabled: true
+        packages: ["elasticsearch"]
+      # ElasticSearch -> config -> elasticsearch.yml
+      elasticsearch_yml:
+        enabled: true
+        file: "elasticsearch.yml"
+        src: "elasticsearch_yml.j2"
+        backup: false
+        data: |
+          path.data: /var/lib/elasticsearch
+          path.logs: /var/log/elasticsearch
+          xpack.security.enabled: false
+          xpack.security.enrollment.enabled: true
+          xpack.security.http.ssl:
+            enabled: true
+            keystore.path: certs/http.p12
+          xpack.security.transport.ssl:
+            enabled: true
+            verification_mode: certificate
+            keystore.path: certs/transport.p12
+            truststore.path: certs/transport.p12
+          http.host: [_local_, _site_]
+      # ElasticSearch -> config -> jvm.options (Fix falling CI "-Djava.io.tmpdir=/var/log/elasticsearch")
+      elasticsearch_jvm_options:
+        enabled: true
+        file: "jvm.options"
+        src: "jvm_options.j2"
+        backup: false
+        data: |
+          8-13:-XX:+UseConcMarkSweepGC
+          8-13:-XX:CMSInitiatingOccupancyFraction=75
+          8-13:-XX:+UseCMSInitiatingOccupancyOnly
+          14-:-XX:+UseG1GC
+          -Djava.io.tmpdir=/var/log/elasticsearch
+          -XX:+HeapDumpOnOutOfMemoryError
+          9-:-XX:+ExitOnOutOfMemoryError
+          -XX:HeapDumpPath=/var/lib/elasticsearch
+          -XX:ErrorFile=/var/log/elasticsearch/hs_err_pid%p.log
+          -Xlog:gc*,gc+age=trace,safepoint:file=/var/log/elasticsearch/gc.log:utctime,pid,tags:filecount=32,filesize=64m
+
+      # Kibana
+      kibana:
+        enabled: true
+        version: "{{ elk.version }}"
+        repo: "elastic"
+        service:
+          enabled: true
+          state: "stopped"
+      # Kibana -> install
+      kibana_install:
+        enabled: true
+        packages: ["kibana"]
+      # Kibana -> config -> kibana.yml
+      kibana_yml:
+        enabled: true
+        file: "kibana.yml"
+        src: "kibana_yml.j2"
+        backup: false
+        data: |
+          pid.file: /run/kibana/kibana.pid
+          server.host: 0.0.0.0
+          server.publicBaseUrl: http://0.0.0.0:5601/
+          logging:
+            appenders:
+              file:
+                type: file
+                fileName: /var/log/kibana/kibana.log
+                layout:
+                  type: json
+            root:
+              appenders:
+                - default
+                - file
+
+      # Logstash
+      logstash:
+        enabled: true
+        version: "{{ elk.version }}"
+        repo: "elastic"
+        service:
+          enabled: true
+          state: "stopped"
+      # Logstash -> install
+      logstash_install:
+        enabled: true
+        packages: ["logstash"]
+      # Logstash -> config -> logstash.yml
+      logstash_yml:
+        enabled: true
+        file: "logstash.yml"
+        src: "logstash_yml.j2"
+        backup: false
+        data: |
+          path.data: /var/lib/logstash
+          path.logs: /var/log/logstash
+      # Logstash -> config -> logstash.conf
+      logstash_conf:
+        input_conf:
+          enabled: true
+          file: "input.conf"
+          src: "input_conf.j2"
+          backup: false
+          data:
+            port: '5044'
+        output_conf:
+          enabled: true
+          file: "output.conf"
+          src: "output_conf.j2"
+          backup: false
+          data:
+            hosts: '["http://localhost:9200"]'
+            index: '"%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"'
+      #     user: 'elastic'
+      #     password: 'changeme'
+      # Logstash -> config -> jvm.options
+      logstash_jvm_options:
+        enabled: false
+        file: "jvm.options"
+        src: "jvm_options.j2"
+        backup: false
+        data: |
+          -Xms1g
+          -Xmx1g
+          11-13:-XX:+UseConcMarkSweepGC
+          11-13:-XX:CMSInitiatingOccupancyFraction=75
+          11-13:-XX:+UseCMSInitiatingOccupancyOnly
+          -Djava.awt.headless=true
+          -Dfile.encoding=UTF-8
+          -Djruby.compile.invokedynamic=true
+          -Djruby.jit.threshold=0
+          -Djruby.regexp.interruptible=true
+          -XX:+HeapDumpOnOutOfMemoryError
+          -Djava.security.egd=file:/dev/urandom
+          -Dlog4j2.isThreadContextMapInheritable=true
+          11-:--add-opens=java.base/java.security=ALL-UNNAMED
+          11-:--add-opens=java.base/java.io=ALL-UNNAMED
+          11-:--add-opens=java.base/java.nio.channels=ALL-UNNAMED
+          11-:--add-opens=java.base/sun.nio.ch=ALL-UNNAMED
+          11-:--add-opens=java.management/sun.management=ALL-UNNAMED
+
+      # Filebeat
+      filebeat:
+        enabled: true
+        version: "{{ elk.version }}"
+        repo: "elastic"
+        service:
+          enabled: true
+          state: "stopped"
+      # Filebeat -> install
+      filebeat_install:
+        enabled: true
+        packages: ["filebeat"]
+      # Filebeat -> config -> filebeat.yml
+      filebeat_yml:
+        enabled: true
+        file: "filebeat.yml"
+        src: "filebeat_yml.j2"
+        backup: false
+        data: |
+          # ============================== Filebeat inputs ===============================
+          filebeat.inputs:
+            - type: filestream
+              enabled: true
+              paths:
+                - /var/log/*.log
+          # ============================== Filebeat modules ==============================
+          filebeat.config.modules:
+            path: ${path.config}/modules.d/*.yml
+            reload.enabled: false
+          # ======================= Elasticsearch template setting =======================
+          setup.template.settings:
+            index.number_of_shards: 1
+          # ================================== General ===================================
+          setup.kibana:
+          # ---------------------------- Elasticsearch Output ----------------------------
+          # output.elasticsearch:
+          #   hosts: ["localhost:9200"]
+          # ------------------------------ Logstash Output -------------------------------
+          output.logstash:
+            hosts: ["localhost:5044"]
+          # ================================= Processors =================================
+          processors:
+            - add_host_metadata:
+                when.not.contains.tags: forwarded
+            - add_cloud_metadata: ~
+            - add_docker_metadata: ~
+            - add_kubernetes_metadata: ~
+          # ================================== Logging ===================================
+          # logging.level: debug
+          # logging.selectors: ["*"]
+          # ============================= X-Pack Monitoring ==============================
+          # monitoring.enabled: false
+          # monitoring.cluster_uuid:
+          # monitoring.elasticsearch:
+          # ============================== Instrumentation ===============================
+          # instrumentation:
+          # enabled: false
+          # environment: ""
+          # hosts:
+          #   - http://localhost:8200
+          # api_key:
+          # secret_token:
+          # ================================= Migration ==================================
+          # migration.6_to_7.enabled: true
+
+      # FirewallD
+      firewalld:
+        enabled: true
+      # FirewallD -> rules
+      firewalld_rules:
+        logstash_port_5044:
+          enabled: true
+          zone: "public"
+          state: "enabled"
+          port: "5044/tcp"
+          permanent: true
+        kibana_port_5601:
+          enabled: true
+          zone: "public"
+          state: "enabled"
+          port: "5601/tcp"
+          permanent: true
+
+  tasks:
+    - name: role darexsu elk
+      include_role:
+        name: darexsu.elk
