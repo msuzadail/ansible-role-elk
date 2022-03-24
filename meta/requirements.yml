@@ -1,0 +1,10 @@
+---
+- name: darexsu.elasticsearch
+
+- name: darexsu.logstash
+
+- name: darexsu.kibana
+
+- name: darexsu.filebeat
+
+- name: darexsu.firewalld
