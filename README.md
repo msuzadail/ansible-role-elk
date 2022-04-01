@@ -7,11 +7,11 @@
       - [requirements](#requirements)
       - [merge behaviour](#merge-behaviour)
   - Playbooks (merge version):
-      - [install and configure: ELK (ElasticSearch, Logstash, Kibana, Filebeat), FirewallD](#install-and-configure-elk-merge-version)
+      - [install and configure: ELK v8.x (ElasticSearch, Logstash, Kibana, Filebeat), FirewallD](#install-and-configure-elk-merge-version)
           - [install:  ELK (ElasticSearch, Logstash, Kibana, Filebeat)](#install-elk-merge-version)
           - [configure:  ELK (ElasticSearch, Logstash, Kibana, Filebeat)](#configure-elk-merge-version)
   - Playbooks (full version):
-      - [install and configure:  ELK (ElasticSearch, Logstash, Kibana, Filebeat), FirewallD](#install-and-configure-elk-full-version)
+      - [install and configure:  ELK v8.x  (ElasticSearch, Logstash, Kibana, Filebeat), FirewallD](#install-and-configure-elk-full-version)
           - [install:  ELK (ElasticSearch, Logstash, Kibana, Filebeat)](#install-elk-full-version)
           - [configure: ELK (ElasticSearch, Logstash, Kibana, Filebeat)](#configure-elk-full-version)
 
@@ -513,7 +513,6 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
     # ElasticSearch -> install
     elasticsearch_install:
       enabled: true
-      packages: ["elasticsearch"]
     # ElasticSearch -> config -> elasticsearch.yml
     elasticsearch_yml:
       enabled: true
@@ -563,7 +562,6 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
     # Kibana -> install
     kibana_install:
       enabled: true
-      packages: ["kibana"]
     # Kibana -> config -> kibana.yml
     kibana_yml:
       enabled: true
@@ -597,7 +595,6 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
     # Logstash -> install
     logstash_install:
       enabled: true
-      packages: ["logstash"]
     # Logstash -> config -> logstash.yml
     logstash_yml:
       enabled: true
@@ -661,7 +658,6 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
     # Filebeat -> install
     filebeat_install:
       enabled: true
-      packages: ["filebeat"]
     # Filebeat -> config -> filebeat.yml
     filebeat_yml:
       enabled: true
@@ -762,7 +758,6 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
     # ElasticSearch -> install
     elasticsearch_install:
       enabled: true
-      packages: ["elasticsearch"]
 
     # Kibana
     kibana:
@@ -775,7 +770,6 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
     # Kibana -> install
     kibana_install:
       enabled: true
-      packages: ["kibana"]
 
     # Logstash
     logstash:
@@ -788,7 +782,6 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
     # Logstash -> install
     logstash_install:
       enabled: true
-      packages: ["logstash"]
 
     # Filebeat
     filebeat:
@@ -801,7 +794,6 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
     # Filebeat -> install
     filebeat_install:
       enabled: true
-      packages: ["filebeat"]
 
   tasks:
     - name: role darexsu elk

@@ -29,7 +29,6 @@ elasticsearch:
 # ElasticSearch -> install
 elasticsearch_install:
   enabled: false
-  packages: ["elasticsearch"]
 
 # ElasticSearch -> config -> elasticsearch.yml
 elasticsearch_yml:
@@ -75,14 +74,14 @@ elasticsearch_jvm_options:
 elasticsearch_const:
   Debian:
     dependencies: [apt-transport-https, gnupg2, ca-certificates, openjdk-11-jdk]
-    elastic:
-      repo: "deb https://artifacts.elastic.co/packages/{{ elasticsearch.version }}/apt stable main"
-      gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    elastic_repo: "deb https://artifacts.elastic.co/packages/{{ elasticsearch.version }}/apt stable main"
+    elastic_gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    packages: ["elasticsearch"]
   RedHat:
     dependencies: ["gnupg2", "java-11-openjdk"]
-    elastic:
-      repo: "https://artifacts.elastic.co/packages/{{ elasticsearch.version }}/yum"
-      gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    elastic_repo: "https://artifacts.elastic.co/packages/{{ elasticsearch.version }}/yum"
+    elastic_gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    packages: ["elasticsearch"]
 
 # Kibana
 kibana:
@@ -96,7 +95,6 @@ kibana:
 # Kibana -> install
 kibana_install:
   enabled: false
-  packages: ["kibana"]
 
 # Kibana -> config -> kibana.yml
 kibana_yml:
@@ -124,14 +122,14 @@ kibana_yml:
 kibana_const:
   Debian:
     dependencies: [apt-transport-https, gnupg2, ca-certificates]
-    elastic:
-      repo: "deb https://artifacts.elastic.co/packages/{{ kibana.version }}/apt stable main"
-      gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    elastic_repo: "deb https://artifacts.elastic.co/packages/{{ kibana.version }}/apt stable main"
+    elastic_gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    packages: ["kibana"]
   RedHat:
     dependencies: ["gnupg2"]
-    elastic:
-      repo: "https://artifacts.elastic.co/packages/{{ kibana.version }}/yum"
-      gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    elastic_repo: "https://artifacts.elastic.co/packages/{{ kibana.version }}/yum"
+    elastic_gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    packages: ["kibana"]
 
 # Logstash
 logstash:
@@ -145,7 +143,6 @@ logstash:
 # Logstash -> install
 logstash_install:
   enabled: false
-  packages: ["logstash"]
 
 # Logstash -> config -> logstash.yml
 logstash_yml:
@@ -207,14 +204,14 @@ logstash_jvm_options:
 logstash_const:
   Debian:
     dependencies: [apt-transport-https, gnupg2, ca-certificates, openjdk-11-jdk]
-    elastic:
-      repo: "deb https://artifacts.elastic.co/packages/{{ logstash.version }}/apt stable main"
-      gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    elastic_repo: "deb https://artifacts.elastic.co/packages/{{ logstash.version }}/apt stable main"
+    elastic_gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    packages: ["logstash"]
   RedHat:
     dependencies: [gnupg2, java-11-openjdk]
-    elastic:
-      repo: "https://artifacts.elastic.co/packages/{{ logstash.version }}/yum"
-      gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    elastic_repo: "https://artifacts.elastic.co/packages/{{ logstash.version }}/yum"
+    elastic_gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    packages: ["logstash"]
 
 # Filebeat
 filebeat:
@@ -287,14 +284,14 @@ filebeat_yml:
 filebeat_const:
   Debian:
     dependencies: [apt-transport-https, gnupg2, ca-certificates]
-    elastic:
-      repo: "deb https://artifacts.elastic.co/packages/{{ filebeat.version }}/apt stable main"
-      gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    packages: ["filebeat"]
+    elastic_repo: "deb https://artifacts.elastic.co/packages/{{ filebeat.version }}/apt stable main"
+    elastic_gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
   RedHat:
     dependencies: [gnupg2]
-    elastic:
-      repo: "https://artifacts.elastic.co/packages/{{ filebeat.version }}/yum"
-      gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+    packages: ["filebeat"]
+    elastic_repo: "https://artifacts.elastic.co/packages/{{ filebeat.version }}/yum"
+    elastic_gpg: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
 
 # FirewallD
 firewalld:
