@@ -15,7 +15,6 @@
       elk:
         enabled: true
         version: "8.x"
-
       # ElasticSearch
       elasticsearch:
         enabled: true
@@ -27,7 +26,6 @@
       # ElasticSearch -> install
       elasticsearch_install:
         enabled: true
-        packages: ["elasticsearch"]
       # ElasticSearch -> config -> elasticsearch.yml
       elasticsearch_yml:
         enabled: true
@@ -77,7 +75,6 @@
       # Kibana -> install
       kibana_install:
         enabled: true
-        packages: ["kibana"]
       # Kibana -> config -> kibana.yml
       kibana_yml:
         enabled: true
@@ -111,7 +108,6 @@
       # Logstash -> install
       logstash_install:
         enabled: true
-        packages: ["logstash"]
       # Logstash -> config -> logstash.yml
       logstash_yml:
         enabled: true
@@ -177,7 +173,6 @@
       # Filebeat -> install
       filebeat_install:
         enabled: true
-        packages: ["filebeat"]
       # Filebeat -> config -> filebeat.yml
       filebeat_yml:
         enabled: true
