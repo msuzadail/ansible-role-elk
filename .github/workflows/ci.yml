@@ -1,7 +1,6 @@
 ---
 name: "CI Molecule"
 on:
-  push:
   schedule:
     - cron: "0 5 * * 6"
 
