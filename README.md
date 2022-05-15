@@ -714,6 +714,9 @@ Your vars [host_vars]  -->  default vars [current role] --> default vars [includ
     # FirewallD
     firewalld:
       enabled: true
+      service:
+        enabled: true
+        state: "started"
     # FirewallD -> rules
     firewalld_rules:
       logstash_port_5044:
