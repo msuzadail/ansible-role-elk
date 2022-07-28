@@ -14,12 +14,12 @@
 
 # ELK
 elk:
-  enabled: false
+  enabled: true
   version: "8.x"
 
 # ElasticSearch
 elasticsearch:
-  enabled: false
+  enabled: true
   version: "{{ elk.version }}"
   repo: "elastic"
   service:
@@ -28,11 +28,11 @@ elasticsearch:
 
 # ElasticSearch -> install
 elasticsearch_install:
-  enabled: false
+  enabled: true
 
 # ElasticSearch -> config -> elasticsearch.yml
 elasticsearch_yml:
-  enabled: false
+  enabled: true
   file: "elasticsearch.yml"
   src: "elasticsearch_yml.j2"
   backup: false
@@ -54,7 +54,7 @@ elasticsearch_yml:
 
 # ElasticSearch -> config -> jvm.options
 elasticsearch_jvm_options:
-  enabled: false
+  enabled: true
   file: "jvm.options"
   src: "jvm_options.j2"
   backup: false
@@ -85,7 +85,7 @@ elasticsearch_const:
 
 # Kibana
 kibana:
-  enabled: false
+  enabled: true
   version: "{{ elk.version }}"
   repo: "elastic"
   service:
@@ -94,11 +94,11 @@ kibana:
 
 # Kibana -> install
 kibana_install:
-  enabled: false
+  enabled: true
 
 # Kibana -> config -> kibana.yml
 kibana_yml:
-  enabled: false
+  enabled: true
   file: "kibana.yml"
   src: "kibana_yml.j2"
   backup: false
@@ -133,7 +133,7 @@ kibana_const:
 
 # Logstash
 logstash:
-  enabled: false
+  enabled: true
   version: "{{ elk.version }}"
   repo: "elastic"
   service:
@@ -142,11 +142,11 @@ logstash:
 
 # Logstash -> install
 logstash_install:
-  enabled: false
+  enabled: true
 
 # Logstash -> config -> logstash.yml
 logstash_yml:
-  enabled: false
+  enabled: true
   file: "logstash.yml"
   src: "logstash_yml.j2"
   backup: false
@@ -157,7 +157,7 @@ logstash_yml:
 # Logstash -> config -> logstash.conf
 logstash_conf:
   input_conf:
-    enabled: false
+    enabled: true
     file: "input.conf"
     src: "input_conf.j2"
     backup: false
@@ -176,7 +176,7 @@ logstash_conf:
 
 # Logstash -> config -> jvm.options
 logstash_jvm_options:
-  enabled: false
+  enabled: true
   file: "jvm.options"
   src: "jvm_options.j2"
   backup: false
@@ -215,7 +215,7 @@ logstash_const:
 
 # Filebeat
 filebeat:
-  enabled: false
+  enabled: true
   version: "{{ elk.version }}"
   repo: "elastic"
   service:
@@ -224,11 +224,11 @@ filebeat:
 
 # Filebeat -> install
 filebeat_install:
-  enabled: false
+  enabled: true
 
 # Filebeat -> config -> filebeat.yml
 filebeat_yml:
-  enabled: false
+  enabled: true
   file: "filebeat.yml"
   src: "filebeat_yml.j2"
   backup: false
@@ -294,7 +294,7 @@ filebeat_const:
 
 # FirewallD
 firewalld:
-  enabled: false
+  enabled: true
 
 # FirewallD -> rules
 firewalld_rules:
